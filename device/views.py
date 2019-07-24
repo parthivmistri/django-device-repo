@@ -54,7 +54,7 @@ class DeviceViewSet(viewsets.ModelViewSet):
             device_id = request.data['id']
             device = Device.objects.get(id=device_id)
             if device.is_engaged:
-                return Response({'message': 'Device is in Use'}, status=status.HTTP_200_OK)
+                return Response({'message': 'Device is in Use'}, status=status.HTTP_400_BAD_REQUEST)
             else:
                 device.is_engaged = True
                 device.user = request.user
@@ -71,9 +71,9 @@ class DeviceViewSet(viewsets.ModelViewSet):
             device_id = request.data['id']
             device = Device.objects.get(id=device_id)
             if not device.is_engaged:
-                return Response({'message': 'Device is already Free'}, status=status.HTTP_200_OK)
+                return Response({'message': 'Device is already Free'}, status=status.HTTP_400_BAD_REQUEST)
             elif request.user.pk != device.user_id:
-                return Response({'message': 'Can not unsubscribe for other user'}, status=status.HTTP_200_OK)
+                return Response({'message': 'Can not unsubscribe for other user'}, status=status.HTTP_400_BAD_REQUEST)
             else:
                 device.is_engaged = False
                 device.user = None

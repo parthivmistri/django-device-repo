@@ -129,3 +129,9 @@ STATIC_URL = '/static/'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 django_heroku.settings(locals())
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.mailgun.org'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'postmaster@sandbox149cd039764f4181995e85d4945c012e.mailgun.org'
+EMAIL_HOST_PASSWORD = 'a881a818d1351e656c16946af0a9a1a3-dc5f81da-181d5d37'
+EMAIL_USE_TLS = True

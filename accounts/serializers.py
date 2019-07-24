@@ -16,3 +16,30 @@ class UserDeviceSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'last_name', 'email', 'first_name', 'user_device')
+
+
+class ConfirmSignUpSerializer(serializers.ModelSerializer):
+    otp = serializers.IntegerField()
+    email = serializers.EmailField()
+
+    class Meta:
+        model = User
+        fields = ('otp', 'email')
+
+
+class InitiateResetPasswordSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField()
+
+    class Meta:
+        model = User
+        fields = ('email',)
+
+
+class ResetPasswordSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField()
+    password = serializers.CharField()
+    otp = serializers.IntegerField()
+
+    class Meta:
+        model = User
+        fields = ('email', 'password', 'otp')
