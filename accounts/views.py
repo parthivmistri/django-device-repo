@@ -132,7 +132,7 @@ class UserViewSet(viewsets.ModelViewSet):
         email = request.data['email']
         user = User.objects.get(email=email)
         if user is not None:
-            user.otp = generateOTP()
+            user.otp = generateOTP()    
             user.save()
             send_mail(
                 'Device Repo',

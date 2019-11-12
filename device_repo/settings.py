@@ -14,6 +14,7 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import django_heroku
+from celery.schedules import crontab
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -33,6 +34,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'accounts',
     'device',
+    'django_celery_results',
     'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -135,3 +137,21 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'postmaster@sandbox149cd039764f4181995e85d4945c012e.mailgun.org'
 EMAIL_HOST_PASSWORD = 'a881a818d1351e656c16946af0a9a1a3-dc5f81da-181d5d37'
 EMAIL_USE_TLS = True
+
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_CACHE_BACKEND = 'django-cache'
+CELERY_IMPORTS = (
+    'accounts.tasks',
+)
+# CELERY_TIMEZONE = 'UTC'
+CELERY_BEAT_SCHEDULE = {
+    'add-every-30-seconds': {
+        'task': 'accounts.tasks.say_hello',
+        'schedule': crontab(minute=1),
+        "args": ()
+    },
+}

@@ -52,8 +52,13 @@ class DeviceViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer_class()(data=self.request.data)
             serializer.is_valid(raise_exception=True)
             device_id = request.data['id']
-            device = Device.objects.get(id=device_id)
-            if device.is_engaged:
+            try:
+                device = Device.objects.get(id=device_id)
+            except Device.DoesNotExist:
+                device = None
+            if device is None:
+                return Response({'message': 'In-valid Id'}, status=status.HTTP_400_BAD_REQUEST)
+            elif device.is_engaged:
                 return Response({'message': 'Device is in Use'}, status=status.HTTP_400_BAD_REQUEST)
             else:
                 device.is_engaged = True
@@ -69,8 +74,13 @@ class DeviceViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer_class()(data=self.request.data)
             serializer.is_valid(raise_exception=True)
             device_id = request.data['id']
-            device = Device.objects.get(id=device_id)
-            if not device.is_engaged:
+            try:
+                device = Device.objects.get(id=device_id)
+            except Device.DoesNotExist:
+                device = None
+            if device is None:
+                return Response({'message': 'In-valid Id'}, status=status.HTTP_400_BAD_REQUEST)
+            elif not device.is_engaged:
                 return Response({'message': 'Device is already Free'}, status=status.HTTP_400_BAD_REQUEST)
             elif request.user.pk != device.user_id:
                 return Response({'message': 'Can not unsubscribe for other user'}, status=status.HTTP_400_BAD_REQUEST)
